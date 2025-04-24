@@ -1,0 +1,50 @@
+import javax.swing.*;
+import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+public class GymMemberForm extends JFrame {
+    JTextField nameField, ageField;
+    JComboBox<String> membershipBox;
+    JButton submitButton;
+
+    public GymMemberForm() {
+        setTitle("Gym Membership Form");
+        setSize(300, 250);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new java.awt.FlowLayout());
+
+        nameField = new JTextField(15);
+        ageField = new JTextField(5);
+        String[] types = {"Monthly", "Quarterly", "Yearly"};
+        membershipBox = new JComboBox<>(types);
+        submitButton = new JButton("Register");
+
+        add(new JLabel("Name:"));
+        add(nameField);
+        add(new JLabel("Age:"));
+        add(ageField);
+        add(new JLabel("Membership:"));
+        add(membershipBox);
+        add(submitButton);
+
+        submitButton.addActionListener(e -> insertMember());
+
+        setVisible(true);
+    }
+
+    void insertMember() {
+        try {
+            Connection con = DBConnection.getConnection();
+            String sql = "INSERT INTO gym_members (name, age, membership_type) VALUES (?, ?, ?)";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, nameField.getText());
+            ps.setInt(2, Integer.parseInt(ageField.getText()));
+            ps.setString(3, membershipBox.getSelectedItem().toString());
+            ps.executeUpdate();
+            JOptionPane.showMessageDialog(this, "Member Registered!");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+}
