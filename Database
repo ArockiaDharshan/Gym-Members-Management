@@ -1,0 +1,10 @@
+CREATE DATABASE GymDB;
+
+USE GymDB;
+
+CREATE TABLE gym_members (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100),
+    age INT,
+    membership_type VARCHAR(50)
+);
